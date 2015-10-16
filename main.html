@@ -1,58 +1,60 @@
-<!-- 6C6 -->
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <style>
+      form {
+        float: right;
+      }
       .hex {
-          float: left;
-          margin-left: 3px;
-          margin-bottom: -26px;
+        float: left;
+        margin-left: 3px;
+        margin-bottom: -26px;
       }
       .hex.blue .top {
-          border-bottom-color: #66C;
+        border-bottom-color: #66C;
       }
       .hex.red .top {
-          border-bottom-color: #C66;
+        border-bottom-color: #C66;
       }
       .hex .top {
-          width: 0;
-          border-bottom: 30px solid #CCC;
-          border-left: 52px solid transparent;
-          border-right: 52px solid transparent;
+        width: 0;
+        border-bottom: 30px solid #CCC;
+        border-left: 52px solid transparent;
+        border-right: 52px solid transparent;
       }
       .hex.blue .middle {
-          background-color: #66C;
+        background-color: #66C;
       }
       .hex.red .middle {
-          background-color: #C66;
+        background-color: #C66;
       }
       .hex .middle {
-          width: 104px;
-          height: 60px;
-          background: #CCC;
+        width: 104px;
+        height: 60px;
+        background: #CCC;
       }
       .hex.blue .bottom {
-          border-top-color: #66C;
+        border-top-color: #66C;
       }
       .hex.red .bottom {
-          border-top-color: #C66;
+        border-top-color: #C66;
       }
       .hex .bottom {
-          width: 0;
-          border-top: 30px solid #CCC;
-          border-left: 52px solid transparent;
-          border-right: 52px solid transparent;
+        width: 0;
+        border-top: 30px solid #CCC;
+        border-left: 52px solid transparent;
+        border-right: 52px solid transparent;
       }
       .hex.placeholder div {
-          border-top-color: transparent;
-          background-color: transparent;
-          border-bottom-color: transparent;
+        border-top-color: transparent;
+        background-color: transparent;
+        border-bottom-color: transparent;
       }
       .hex-row {
-          clear: left;
+        clear: left;
       }
       .hex-row.even {
-          margin-left: 53px;
+        margin-left: 53px;
       }
     </style>
     <script>
@@ -60,10 +62,33 @@
         var team = false;
         var board = {};
 
+        var players = {
+          false: 'human',
+          true: 'cpu',
+        }
+
+        _ = function() {
+          var query = window.location.search.substring(1);
+          var vars = query.split('&');
+          for(var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if(pair[0] == 'p1') {
+              players[false] = pair[1];
+            }
+            if(pair[0] == 'p2') {
+              players[true] = pair[1];
+            }
+          }
+
+          $("#p1").val(players[false])
+          $("#p2").val(players[true])
+        }()
+
         var move = function(div) {
           div.addClass(team?'blue':'red');
           board[div.attr('data-coord')] = team;
           team = !team;
+          act()
         }
 
         var get_move = function() {
@@ -84,136 +109,156 @@
           })
         }
 
+        var act = function() {
+          if(players[team] == 'cpu') {
+            get_move();
+          }
+        }
+
         $(".hex").on("click", function(evt) {
-          if(team) return;
+          if(players[team] != 'human') return;
           var div = $(this);
           if(div.is(".blue,.red,.placeholder")) return;
           move(div);
-          get_move();
         })
 
+        act();
       }
     </script>
   </head>
   <body>
-    <div class='hex-row'>
-      <div class='hex placeholder'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
+    <div class='hex-board'>
+      <div class='hex-row'>
+        <div class='hex placeholder'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[0, 2, -2]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[1, 1, -2]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[2, 0, -2]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
       </div>
-      <div class='hex' data-coord='[0, 2, -2]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[1, 1, -2]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[2, 0, -2]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-    </div>
 
-    <div class='hex-row even'>
-      <div class='hex' data-coord='[-1, 2, -1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
+      <div class='hex-row even'>
+        <div class='hex' data-coord='[-1, 2, -1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[0, 1, -1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[1, 0, -1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[2, -1, -1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
       </div>
-      <div class='hex' data-coord='[0, 1, -1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[1, 0, -1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[2, -1, -1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-    </div>
 
-    <div class='hex-row'>
-      <div class='hex' data-coord='[-2, 2, 0]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
+      <div class='hex-row'>
+        <div class='hex' data-coord='[-2, 2, 0]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[-1, 1, 0]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[0, 0, 0]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[1, -1, 0]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[2, -2, 0]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
       </div>
-      <div class='hex' data-coord='[-1, 1, 0]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[0, 0, 0]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[1, -1, 0]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[2, -2, 0]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-    </div>
 
-    <div class='hex-row even'>
-      <div class='hex' data-coord='[-2, 1, 1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
+      <div class='hex-row even'>
+        <div class='hex' data-coord='[-2, 1, 1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[-1, 0, 1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[0, -1, 1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[1, -2, 1]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
       </div>
-      <div class='hex' data-coord='[-1, 0, 1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[0, -1, 1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[1, -2, 1]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-    </div>
 
-    <div class='hex-row'>
-      <div class='hex placeholder'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[-2, 0, 2]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[-1, -1, 2]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
-      </div>
-      <div class='hex' data-coord='[0, -2, 2]'>
-        <div class='top'></div>
-        <div class='middle'></div>
-        <div class='bottom'></div>
+      <div class='hex-row'>
+        <div class='hex placeholder'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[-2, 0, 2]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[-1, -1, 2]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
+        <div class='hex' data-coord='[0, -2, 2]'>
+          <div class='top'></div>
+          <div class='middle'></div>
+          <div class='bottom'></div>
+        </div>
       </div>
     </div>
+    <form>
+      <select id='p1' name='p1'>
+        <option value='human' selected>Human</option>
+        <option value='cpu'>Computer</option>
+      </select>
+      vs
+      <select id='p2' name='p2'>
+        <option value='human'>Human</option>
+        <option value='cpu' selected>Computer</option>
+      </select>
+      <input type='submit' value='New Game'>
+    </form>
   </body>
 </html>
