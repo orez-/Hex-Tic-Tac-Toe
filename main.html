@@ -70,7 +70,10 @@
           $.ajax({
             type: "POST",
             url: '/logic',
-            data: JSON.stringify(board),
+            data: JSON.stringify({
+              'board': board,
+              'player': team,
+            }),
             success: function(spot) {
               if(spot === null) return;
               var div = $('[data-coord="[' + spot.join(', ') + ']"]');
