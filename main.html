@@ -72,6 +72,7 @@
             url: '/logic',
             data: JSON.stringify(board),
             success: function(spot) {
+              if(spot === null) return;
               var div = $('[data-coord="[' + spot.join(', ') + ']"]');
               move(div);
             },
