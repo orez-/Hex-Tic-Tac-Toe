@@ -115,7 +115,42 @@
           }
         }
 
+        var pixel_in_hex = function(self, evt) {
+          var offset = $(self).offset()
+          var relX = evt.pageX - offset.left;
+          var relY = evt.pageY - offset.top;
+
+          var width = $(self).width();
+          var height = $(self).height();
+
+          // Center + normalize coord
+          relX = Math.abs(relX - width / 2);
+          relY = Math.abs(relY - height / 2);
+
+          return relY <= -((height / 2) / width) * relX + (height / 2) && relX <= width / 2;
+        }
+
+        var propagate_mouse_event = function(self, evt) {
+          var new_event = new jQuery.Event(evt.type);
+          new_event.pageX = evt.pageX;
+          new_event.pageY = evt.pageY;
+          new_event.clientX = evt.clientX;
+          new_event.clientY = evt.clientY;
+
+          // Really disappointed this is the canonical way to propagate click events.
+          $(self).hide();
+          var elem = document.elementFromPoint(evt.clientX, evt.clientY);
+          // We trigger before re-showing in case we need to propagate multiple times.
+          $(elem).trigger(new_event);
+          $(self).show();
+        }
+
         $(".hex").on("click", function(evt) {
+          if(!pixel_in_hex(this, evt)) {
+            propagate_mouse_event(this, evt);
+            return;
+          }
+
           if(players[team] != 'human') return;
           var div = $(this);
           if(div.is(".blue,.red,.placeholder")) return;

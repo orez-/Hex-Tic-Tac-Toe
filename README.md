@@ -5,4 +5,3 @@ The goal of the game is to span any row in any of the three directions before yo
 
 #### Known Issues
 - Can keep playing after the game ends (gameover logic does not exist clientside, and human moves are not validated against the server).
-- [Detecting clicks on hex grids in html is relatively a nightmare](http://4.bp.blogspot.com/-xxi7xTHUVy8/TVo0cbUyyTI/AAAAAAAAAeY/ajzNIsgBjhI/s400/hex.png).
