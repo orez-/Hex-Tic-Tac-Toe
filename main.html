@@ -138,11 +138,11 @@
           new_event.clientY = evt.clientY;
 
           // Really disappointed this is the canonical way to propagate click events.
-          $(self).hide();
+          $(self).css('visibility', 'hidden');
           var elem = document.elementFromPoint(evt.clientX, evt.clientY);
           // We trigger before re-showing in case we need to propagate multiple times.
           $(elem).trigger(new_event);
-          $(self).show();
+          $(self).css('visibility', 'visible');
         }
 
         $(".hex").on("click", function(evt) {
